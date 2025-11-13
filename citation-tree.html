@@ -1,0 +1,51 @@
+  <div class="tab-container">
+  <!-- Tabs -->
+  <ul class="tab-header">
+    <li *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="switchTab(tab)">
+      {{ tab }}
+    </li>
+  </ul>
+
+  <!-- Toolbar and chart area -->
+  <div class="toolbar">
+    <div class="left-controls">
+
+      <!-- View By -->
+      <div class="control-box">
+        <label>View By:</label>
+        <select [(ngModel)]="viewBy" (change)="onViewByChange()">
+          <option *ngFor="let opt of viewOptions">{{ opt }}</option>
+        </select>
+      </div>
+
+      <!-- Color By -->
+      <div class="control-box">
+        <label>Color By:</label>
+
+        <select [(ngModel)]="colorBy" (change)="onColorByChange(colorBy)">
+          <option *ngFor="let opt of colorOptions" [value]="opt.id">
+            {{ opt.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Font -->
+      <div class="font-box">
+        <label>Font:</label>
+        <span>(<span class="slider-value">{{sliderValue}}</span>)</span>
+        <input type="range" min="-5" max="10" [(ngModel)]="sliderValue" (ngModelChange)="onFontChange($event)">
+
+      </div>
+    </div>
+
+    <button class="reset-btn" (click)="resetTree()">Reset</button>
+  </div>
+
+  <div id="infovis" class="chart-container"></div>
+</div>
+
+<!-- Info box -->
+<div *ngIf="selectedNode" class="info-box">
+  <span>{{ selectedNode?.type }}</span>
+  <div class="info-title">{{ selectedNode?.name }}</div>
+</div>

@@ -8,135 +8,288 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* padding: 6px 10px; */
   background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  margin-bottom: 8px;
-  border-radius: 6px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-/* Group of control boxes */
+/* Left controls */
 .left-controls {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
-/* Individual control block (View By / Color By / Font) */
 .control-box {
-  margin: 2px;
   display: flex;
   align-items: center;
   background: #f9fafb;
-  border: 1px solid #ddd; 
-  border-radius: 3px; 
-  padding: 2px 5px;
-  /* box-shadow: 0 1px 2px rgba(0,0,0,0.05); */
-}
-.font-box {
-  margin: 2px;
-  display: flex;
-  align-items: center;
-  /* gap: 1px; */
-  /* background: #f9fafb; */
-  padding: 2px 5px;
-  /* box-shadow: 0 1px 2px rgba(0,0,0,0.05); */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 3px 8px;
 }
 
-.font-box label {
-  color: #333638;
-  font-size: 17px;
-  
-}
-
-/* Label styling */
 .control-box label {
-  color: #1e2022;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  margin-right: 4px;
+  color: #444;
 }
 
-/* Remove inner borders for select boxes (View By + Color By) */
 .control-box select {
   border: none;
   background: transparent;
   outline: none;
   font-size: 13px;
-  color: #1e2022;
 }
 
-/* Keep slider with normal border */
-.control-box input[type="range"] {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fff;
+.font-box {
+  display: flex;
+  align-items: center;
+  padding: 3px 8px;
 }
 
-/* Reset button styling */
-.reset-btn {
-  background: #fff;
-  color: #186cea;
-  padding: 8px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  padding-right: 40px;
+.font-box label {
+  margin-right: 5px;
+  font-size: 14px;
 }
 
-/* Font slider value color */
 .slider-value {
-  color: rgb(96, 96, 228);
+  color: #185edb;
   font-weight: 600;
+  margin: 0 4px;
 }
 
-/* Chart area */
+.reset-btn {
+  background: transparent;
+  border: none;
+  color: #186cea;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Chart container */
 .chart-container {
   width: 100%;
-  height: calc(100vh - 140px);
+  height: calc(100vh - 150px);
   background: #fafafa;
-  border-radius: 8px;
   padding: 10px;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 
-/* Info box */
-.info-box {
-  position: absolute;
-  top: 100px;
-  background: #ffffff;
-  padding: 10px 14px;
-  font-size: small;
-}
-
-/* Tabs section */
-.tab-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
+/* Tabs */
 .tab-header {
   display: flex;
-  flex-wrap: wrap;
   list-style: none;
-  border-bottom: 1px solid #ddd;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  border-bottom: 2px solid #e0e0e0;
 }
 
 .tab-header li {
-  padding: 4px 5px;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  padding: 2px 8px;
   cursor: pointer;
-  color: #58595b;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-}
-
-.tab-header li:hover {
-  color: #186cea;
+  color: #5a5a5a;
 }
 
 .tab-header li.active {
   border-bottom: 3px solid #186cea;
-  color: #000;
+  color: #186cea;
+}
+
+
+/* ===============================
+      LEFT SLIDER BUTTON
+=============================== */
+.left-toggle-button {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  /* width: 40px;
+  height: 70px; */
+  padding: 6px 7px;
+  border-radius: 0 6px 6px 0;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.left-toggle-button:hover {
+  background: #f3f6ff;
+}
+
+
+/* ===============================
+      BACKDROP FOR LEFT SLIDER
+=============================== */
+.slider-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1090;
+  background: rgba(0,0,0,0.25);
+}
+
+
+/* ===============================
+      LEFT SLIDER PANEL
+=============================== */
+.side-slider {
+  position: fixed;
+  top: 0;
+  left: -360px;
+  width: 360px;
+  height: 100vh;
   background: #fff;
+  z-index: 1100;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-slider.open {
+  left: 0;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.slider-content {
+  padding: 14px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+
+/* ===============================
+      RIGHT SLIDER BUTTON
+=============================== */
+.right-slider-button {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 6px 7px;
+  cursor: pointer;
+  border-radius: 6px 0 0 6px;
+  z-index: 1200;
+  font-size: 22px;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.right-slider-button:hover {
+  background: #f3f6ff;
+}
+
+
+/* ===============================
+      RIGHT SLIDER PANEL
+=============================== */
+.right-slider-panel {
+  position: fixed;
+  top: 0;
+  right: -340px;
+  width: 340px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -3px 0 15px rgba(0,0,0,0.18);
+  transition: right 0.3s ease;
+  padding: 15px;
+  z-index: 1100;
+}
+
+.right-slider-panel {
+  right: -340px;    /* hidden */
+  transition: right 0.3s ease-in-out;
+}
+
+.right-slider-panel.open {
+  right: 0;         /* visible */
+}
+
+#infovis {
+    position: relative;   /* REQUIRED */
+}
+/* Node Name  */
+.tnavcontainer {
+    width: 100%;
+    padding: 4px 10px;
+    background: #fff;
+}
+
+.tnavwrapper {
+    display: flex;
+    align-items: center;
+}
+
+.arrow-steps {
+    white-space: nowrap;
+    display: inline-flex;
+}
+
+.arrow-steps .step {
+    white-space: nowrap;
+}
+
+.ct-context-menu {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #ccc;
+  min-width: 180px;
+  z-index: 5000;
+  padding: 4px 0;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+  list-style: none;
+}
+
+.ct-context-menu li {
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ct-context-menu li:hover {
+  background: #6892e0;
+}
+
+.submenu {
+  position: relative;
+}
+
+.submenu-list {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 175px;
+  background: #fff;
+  border: 1px solid #ccc;
+  min-width: 180px;
+  z-index: 5100;
+  border-radius: 4px;
+  padding: 4px 0;
+}
+
+.submenu:hover .submenu-list {
+  display: block;
 }

@@ -1,51 +1,118 @@
-  <div class="tab-container">
-  <!-- Tabs -->
-  <ul class="tab-header">
-    <li *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="switchTab(tab)">
-      {{ tab }}
-    </li>
-  </ul>
+<div class="tab-container">
 
-  <!-- Toolbar and chart area -->
-  <div class="toolbar">
-    <div class="left-controls">
+  <!-- LEFT SLIDER TOGGLE BUTTON -->
+  <button class="left-toggle-button" (click)="toggleSlider()" title="Open Left Slider">
+    <span class="chev">></span>
+  </button>
 
-      <!-- View By -->
-      <div class="control-box">
-        <label>View By:</label>
-        <select [(ngModel)]="viewBy" (change)="onViewByChange()">
-          <option *ngFor="let opt of viewOptions">{{ opt }}</option>
-        </select>
+  <!-- RIGHT SLIDER TOGGLE BUTTON -->
+  <div class="right-slider-button" (click)="toggleRightSlider()">
+    {{ rightSliderOpen ? '>' : '<' }} </div>
+
+      <!-- Tabs -->
+      <ul class="tab-header">
+        <li *ngFor="let tab of tabs" [class.active]="activeTab === tab" (click)="switchTab(tab)">
+          {{ tab }}
+        </li>
+      </ul>
+
+      <!-- Toolbar -->
+      <div class="toolbar d-flex align-items-center justify-content-between">
+
+        <!-- LEFT CONTROLS -->
+        <div class="left-controls d-flex align-items-center">
+
+          <!-- View By -->
+          <div class="control-box">
+            <label>View by:</label>
+            <select [(ngModel)]="viewBy" (change)="onViewByChange()">
+              <option *ngFor="let opt of viewOptions">{{ opt }}</option>
+            </select>
+          </div>
+
+          <!-- Color By -->
+          <div class="control-box">
+            <label>Color By:</label>
+            <select [(ngModel)]="colorBy" (change)="onColorByChange(colorBy)">
+              <option *ngFor="let opt of colorOptions" [value]="opt.id">{{ opt.name }}</option>
+            </select>
+          </div>
+
+          <!-- Font slider -->
+          <div class="font-box">
+            <label>Font:</label>
+            (<span class="slider-value">{{ sliderValue }}</span>)
+            <input type="range" min="-5" max="10" [(ngModel)]="sliderValue" (ngModelChange)="onFontChange($event)">
+          </div>
+
+        </div>
+
+        <!-- RIGHT SIDE: Reset + Download -->
+        <div class="right-controls d-flex align-items-center">
+
+          <button class="reset-btn me-2" (click)="resetTree()">Reset</button>
+
+          <!-- Download dropdown -->
+          <div class="dropdown">
+            <span>⬇</span>
+            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="mdi mdi-download"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" (click)="onClkDwnldGrph('image/png')">PNG</a></li>
+              <li><a class="dropdown-item" href="#" (click)="onClkDwnldGrph('image/jpeg')">JPG</a></li>
+            </ul>
+          </div>
+
+        </div>
+
       </div>
 
-      <!-- Color By -->
-      <div class="control-box">
-        <label>Color By:</label>
+        <!-- Graph -->
+      <div id="infovis" class="chart-container"></div>
 
-        <select [(ngModel)]="colorBy" (change)="onColorByChange(colorBy)">
-          <option *ngFor="let opt of colorOptions" [value]="opt.id">
-            {{ opt.name }}
-          </option>
-        </select>
+      <ul class="ct-context-menu" *ngIf="contextMenu.visible" [style.left.px]="contextMenu.x"
+        [style.top.px]="contextMenu.y">
+
+        <li (click)="showNodeDetails(contextMenu.node)">Node Details</li>
+
+        <li class="submenu">
+          Split by top 5
+          <ul class="submenu-list">
+            <li (click)="splitNode(contextMenu.node,'Current Owner')">Current Owner</li>
+            <li (click)="splitNode(contextMenu.node,'Original Assignee')">Original Assignee</li>
+            <li (click)="splitNode(contextMenu.node,'Inventor')">Inventor</li>
+            <li (click)="splitNode(contextMenu.node,'IPC')">IPC</li>
+            <li (click)="splitNode(contextMenu.node,'Tech Domain')">Tech Domain</li>
+          </ul>
+        </li>
+
+        <li (click)="expandNode(contextMenu.node)">Expand to Next Level</li>
+        <li (click)="addToProject(contextMenu.node)">Add to Project</li>
+      </ul>
+
+
+      <!-- BACKDROP WHEN LEFT SLIDER OPEN -->
+      <div class="slider-backdrop" *ngIf="sliderOpen" (click)="toggleSlider()"></div>
+
+      <!-- LEFT SLIDER PANEL -->
+      <aside class="side-slider" [class.open]="sliderOpen">
+
+        <div class="slider-content">
+          <!-- Show selected node -->
+          <ng-container *ngIf="selectedNodeForMenu; else placeholder">
+
+          </ng-container>
+
+          <ng-template #placeholder>
+            <p>No node selected.</p>
+          </ng-template>
+        </div>
+      </aside>
+
+      <!-- RIGHT SLIDER PANEL -->
+      <div class="right-slider-panel" [class.open]="rightSliderOpen">
+
       </div>
 
-      <!-- Font -->
-      <div class="font-box">
-        <label>Font:</label>
-        <span>(<span class="slider-value">{{sliderValue}}</span>)</span>
-        <input type="range" min="-5" max="10" [(ngModel)]="sliderValue" (ngModelChange)="onFontChange($event)">
-
-      </div>
-    </div>
-
-    <button class="reset-btn" (click)="resetTree()">Reset</button>
   </div>
-
-  <div id="infovis" class="chart-container"></div>
-</div>
-
-<!-- Info box -->
-<div *ngIf="selectedNode" class="info-box">
-  <span>{{ selectedNode?.type }}</span>
-  <div class="info-title">{{ selectedNode?.name }}</div>
-</div>

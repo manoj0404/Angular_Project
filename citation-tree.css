@@ -5,10 +5,10 @@
 
 /* Toolbar container */
 .toolbar {
+  margin-top: 2px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* padding: 6px 10px; */
   background: #fff;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -17,7 +17,7 @@
 .left-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
 }
 
 .control-box {
@@ -52,7 +52,9 @@
   margin-right: 5px;
   font-size: 14px;
 }
-
+.font-box input[type="range"] {
+  accent-color: #8a7fa8; /* purple-gray */
+}
 .slider-value {
   color: #185edb;
   font-weight: 600;
@@ -63,8 +65,12 @@
   background: transparent;
   border: none;
   color: #186cea;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
+  font-weight: 500;
+}
+.reset-btn:hover {
+  font-weight:bold;
 }
 
 .right-controls {
@@ -83,6 +89,8 @@
 
 /* Tabs */
 .tab-header {
+  flex-wrap: nowrap;
+  overflow-x: auto;
   display: flex;
   list-style: none;
   padding: 0;
@@ -91,7 +99,6 @@
 }
 
 .tab-header li {
-  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   padding: 2px 8px;
   cursor: pointer;
   color: #5a5a5a;
@@ -102,50 +109,9 @@
   color: #186cea;
 }
 
-
-/* ===============================
-      LEFT SLIDER BUTTON
-=============================== */
-.left-toggle-button {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  /* width: 40px;
-  height: 70px; */
-  padding: 6px 7px;
-  border-radius: 0 6px 6px 0;
-  border: 1px solid #ccc;
-  background: white;
-  z-index: 1200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 22px;
-  font-weight: bold;
-  transition: background 0.2s ease;
-}
-
-.left-toggle-button:hover {
-  background: #f3f6ff;
-}
-
-
-/* ===============================
-      BACKDROP FOR LEFT SLIDER
-=============================== */
-.slider-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1090;
-  background: rgba(0,0,0,0.25);
-}
-
-
-/* ===============================
-      LEFT SLIDER PANEL
-=============================== */
+/* ======================================
+   LEFT SLIDER PANEL
+====================================== */
 .side-slider {
   position: fixed;
   top: 0;
@@ -160,15 +126,32 @@
   flex-direction: column;
 }
 
+/* When open */
 .side-slider.open {
   left: 0;
 }
 
-.slider-header {
+/* Moving left button */
+.left-toggle-button {
+  position: absolute;
+  top: 50%;
+  right: -35px;
+  transform: translateY(-50%);
+  padding: 6px 7px;
+  border-radius: 0 6px 6px 0;
+  border: 1px solid #ccc;
+  background: white;
+  z-index: 1200;
   display: flex;
-  justify-content: space-between;
-  padding: 14px;
-  border-bottom: 1px solid #ddd;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 22px;
+  transition: right 0.3s ease;
+}
+
+.left-toggle-button:hover {
+  background: #f3f6ff;
 }
 
 .slider-content {
@@ -177,34 +160,17 @@
   flex: 1;
 }
 
-
-/* ===============================
-      RIGHT SLIDER BUTTON
-=============================== */
-.right-slider-button {
+/* BACKDROP */
+.slider-backdrop {
   position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  background: white;
-  border: 1px solid #ccc;
-  padding: 6px 7px;
-  cursor: pointer;
-  border-radius: 6px 0 0 6px;
-  z-index: 1200;
-  font-size: 22px;
-  font-weight: bold;
-  transition: background 0.2s ease;
+  inset: 0;
+  z-index: 1090;
+  background: rgba(0,0,0,0.25);
 }
 
-.right-slider-button:hover {
-  background: #f3f6ff;
-}
-
-
-/* ===============================
-      RIGHT SLIDER PANEL
-=============================== */
+/* ======================================
+   RIGHT SLIDER PANEL
+====================================== */
 .right-slider-panel {
   position: fixed;
   top: 0;
@@ -213,44 +179,37 @@
   height: 100vh;
   background: #fff;
   box-shadow: -3px 0 15px rgba(0,0,0,0.18);
-  transition: right 0.3s ease;
-  padding: 15px;
-  z-index: 1100;
-}
-
-.right-slider-panel {
-  right: -340px;    /* hidden */
   transition: right 0.3s ease-in-out;
+  z-index: 1100;
+  padding: 15px;
 }
 
+/* When open */
 .right-slider-panel.open {
-  right: 0;         /* visible */
+  right: 0;
 }
 
-#infovis {
-    position: relative;   /* REQUIRED */
-}
-/* Node Name  */
-.tnavcontainer {
-    width: 100%;
-    padding: 4px 10px;
-    background: #fff;
-}
-
-.tnavwrapper {
-    display: flex;
-    align-items: center;
-}
-
-.arrow-steps {
-    white-space: nowrap;
-    display: inline-flex;
+/* Moving right button */
+.right-slider-button {
+  position: absolute;
+  top: 50%;
+  left: -35px;
+  transform: translateY(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 6px 7px;
+  border-radius: 6px 0 0 6px;
+  cursor: pointer;
+  font-size: 22px;
+  z-index: 1200;
+  transition: left 0.3s ease;
 }
 
-.arrow-steps .step {
-    white-space: nowrap;
+.right-slider-button:hover {
+  background: #f3f6ff;
 }
 
+/* Context menu */
 .ct-context-menu {
   position: fixed;
   background: #fff;
@@ -266,7 +225,6 @@
 .ct-context-menu li {
   padding: 6px 14px;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .ct-context-menu li:hover {
@@ -293,3 +251,76 @@
 .submenu:hover .submenu-list {
   display: block;
 }
+
+#infovis {
+  position: relative;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+:host ::ng-deep .tnavcontainer {
+  font-family: 'Lato', sans-serif;
+  margin: 0;
+  padding: 6px 12px;
+}
+
+:host ::ng-deep .tnavwrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .arrow-steps .step {
+  font-size: 12px;
+  text-align: center;
+  color: #666;
+  padding: 2px 5px 2px 20px;
+  float: left;
+  margin: 0 3px;
+  min-width: 50px;
+  cursor: default;
+  background: #d9e3f7;
+  position: relative;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+:host ::ng-deep .arrow-steps .step:after,
+:host ::ng-deep .arrow-steps .step:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 11px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+:host ::ng-deep .arrow-steps .step:after {
+  right: -17px;
+  border-left: 17px solid #d9e3f7;
+}
+
+:host ::ng-deep .arrow-steps .step:before {
+  left: 0;
+  border-left: 17px solid #fff;
+}
+
+:host ::ng-deep .arrow-steps .step:first-child:before {
+  border-top-left-radius: 4px;
+  border: none;
+}
+
+:host ::ng-deep .arrow-steps .step.current {
+  color: #fff;
+  background: #23468c;
+  border-radius: 3px;
+}
+
+:host ::ng-deep .arrow-steps .step.current:after {
+  border-left-color: #23468c;
+}
+
+

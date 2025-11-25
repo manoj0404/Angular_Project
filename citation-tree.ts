@@ -1,9 +1,11 @@
+
+
 import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CitationTreeService } from '../../services/citation-tree-service';
-
-// declare all possible globals exposed by your two files
+import html2canvas from 'html2canvas';
+// declare all possible globals exposed by two files
 declare global {
   interface Window {
     hprPatSeerTree?: any;
@@ -55,7 +57,7 @@ export class CitationTree implements AfterViewInit {
   private citationData: any;
 
   closeContextMenu() {
-     this.contextMenu.visible = false;
+    this.contextMenu.visible = false;
   }
   readonly baseFont = 14;
   readonly minFontPx = -5;
@@ -66,20 +68,20 @@ export class CitationTree implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // verify globals exist (prevents “not a constructor”)
+    // verify globals exist
     const Ctor = window.hprPatSeerTree || window.PatHyprTree || window.hCitationTree;
     if (typeof Ctor !== 'function') {
       console.error('PatSeer libs not loaded. Check index.html script tags and /assets path.');
       return;
     }
 
-    // get normalized data from your service
+    // get normalized data from  service
     this.citationData = this.svc.getCitationData(this.viewBy);
 
     // build PatSeer input JSON (root → Forward/Backward identifier → leaves)
     const inputJSON = this.buildPatseerInput(this.citationData);
 
-    // build treeOptions exactly as the old PatSeer code expects
+    // congfiguration tree
     this.switchTab(inputJSON.data.tName);
     this.treeOptions = {
       container: 'infovis',
@@ -114,7 +116,7 @@ export class CitationTree implements AfterViewInit {
     // construct and draw
     try {
       this.tree = new Ctor(this.treeOptions);
-      // your libs expose drawVizGraph() entry point
+      // libs expose drawVizGraph() entry point
       if (this.tree.drawVizGraph) {
         this.tree.drawVizGraph();
       } else if (this.tree.drawGraph) {
@@ -128,8 +130,10 @@ export class CitationTree implements AfterViewInit {
   // --- UI handlers ---
   switchTab(tab: string): void {
     this.activeTab = tab;
-    const tabMinus = `(g-1)${tab}`;
-    const tabPlus = `(g+1)${tab}`;
+
+    const italicG = "\u{1D628}";
+    const tabMinus = `(${italicG}-1)${tab}`;
+    const tabPlus = `(${italicG}+1)${tab}`;
 
     this.addGenerationTab(tabMinus);
     this.addGenerationTab(tabPlus);
@@ -140,30 +144,34 @@ export class CitationTree implements AfterViewInit {
     this.rightSliderOpen = !this.rightSliderOpen;
   }
 
-  showNodeDetails(node : any){
-    debugger;
-    console.log("Node Details is click...");
+  showNodeDetails(node: any) {
+    console.log("Node Details is click");
+    this.rightSliderOpen = true;
     this.closeContextMenu();
   }
-  splitNode(node :any,type : string){
-    console.log("Split node is click...");
-    this.closeContextMenu();
-  }
-
-  expandNode(node:any){
-    console.log("Expanded node ...");
+  splitNode(node: any, type: string) {
+    console.log("Split node is click");
     this.closeContextMenu();
   }
 
-  addToProject(node:any){
-    console.log("Add to Project ...");
+  expandNode(node: any) {
+    console.log("Expanded node ");
     this.closeContextMenu();
   }
-  onViewByChange(): void {
+
+  addToProject(node: any) {
+    console.log("Add to Project ");
+    this.closeContextMenu();
+  }
+  onViewByChange(val: string): void {
+    this.viewBy = val;
     this.citationData = this.svc.getCitationData(this.viewBy);
     this.resetTree();
   }
 
+  getColorOptionName(id: number): string {
+    return this.colorOptions.find(opt => opt.id === id)?.name || '';
+  }
   onColorByChange(fld: number): void {
     this.colorBy = fld;
     if (this.tree && typeof this.tree.colorByFld === 'function') {
@@ -182,8 +190,7 @@ export class CitationTree implements AfterViewInit {
     if (this.tree && typeof this.tree.setGrphFont === 'function') {
       this.tree.setGrphFont(size);
     } else {
-      // fallback: attempt to update labels if library doesn't provide API
-      // comment: this may not work if labels are canvas-drawn by lib
+
       const px = `${this.effectiveFontPx}px`;
       document.querySelectorAll('#infovis .ht-label').forEach((el: any) => {
         el.style.fontSize = px;
@@ -231,6 +238,33 @@ export class CitationTree implements AfterViewInit {
     if (!this.tabs.includes(tabName)) {
       this.tabs.push(tabName);
     }
+  }
+  downloadAsImage(type: "png" | "jpg") {    // download imgboth using html2canvas 
+    const element = document.getElementById("infovis-canvas");
+
+    if (!element) {
+      console.error("Tree container #infovis not found.");
+      return;
+    }
+
+    html2canvas(element, {
+      useCORS: true,
+      scale: 2,   // High quality
+      backgroundColor: "#ffffff"
+    }).then(canvas => {
+
+      const fileName = `citation-tree.${type}`;
+      let imageData =
+        type === "png"
+          ? canvas.toDataURL("image/png")
+          : canvas.toDataURL("image/jpeg", 1.0);
+
+      // Create download link
+      const link = document.createElement("a");
+      link.href = imageData;
+      link.download = fileName;
+      link.click();
+    });
   }
 
   private buildPatseerInput(src: any): any {
@@ -312,3 +346,4 @@ export class CitationTree implements AfterViewInit {
     };
   }
 }
+
